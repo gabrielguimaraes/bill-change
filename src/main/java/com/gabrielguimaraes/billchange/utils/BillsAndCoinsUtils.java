@@ -1,11 +1,16 @@
 package com.gabrielguimaraes.billchange.utils;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 final public class BillsAndCoinsUtils {
+    public static final Logger LOG = LoggerFactory.getLogger(BillsAndCoinsUtils.class);
+
     private BillsAndCoinsUtils() {
     }
 
@@ -22,9 +27,9 @@ final public class BillsAndCoinsUtils {
     public static final BigDecimal BILL_50 = new BigDecimal("50").stripTrailingZeros();
     public static final BigDecimal BILL_100 = new BigDecimal("100").stripTrailingZeros();
 
-    private static final Set<BigDecimal> COINS = Set.of(COIN_0_01, COIN_0_05, COIN_0_10, COIN_0_25);
+    public static final List<BigDecimal> COINS = List.of(COIN_0_25, COIN_0_10, COIN_0_05, COIN_0_01);
 
-    private static final Set<BigDecimal> BILLS = Set.of(BILL_1, BILL_2, BILL_5, BILL_10, BILL_20, BILL_50, BILL_100);
+    public static final List<BigDecimal> BILLS = List.of(BILL_1, BILL_2, BILL_5, BILL_10, BILL_20, BILL_50, BILL_100);
 
     public static Boolean isValidCoin(String cointStr) {
         Optional<BigDecimal> parsedCoin = parseBigDecimal(cointStr);
@@ -48,6 +53,6 @@ final public class BillsAndCoinsUtils {
     }
 
     public static String printBillsAsString() {
-        return BILLS.stream().sorted().map(BigDecimal::toPlainString).collect(Collectors.joining(","));
+        return BILLS.stream().map(BigDecimal::toPlainString).collect(Collectors.joining(","));
     }
 }

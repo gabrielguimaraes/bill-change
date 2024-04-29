@@ -16,19 +16,24 @@ import com.gabrielguimaraes.billchange.utils.BillsAndCoinsUtils;
 
 /**
  * 
-• Available bills are (1, 2, 5, 10, 20, 50, 100) • Available coins are (0.01, 0.05, 0.10, 0.25) 
-• Start with 100 coins of each type
-• Change should be made by utilizing the least amount of coins 
-• API should validate bad input and respond accordingly
-• Service should respond with an appropriate message if it does not have enough coins to make change • The service should maintain the state of the coins throughout the transactions
-• Deliver the code with test cases
-• Upload your code to GitHub and come to interview prepared to walk through code 
-
-Bonus:
-• Allow for number of coins to be configurable and easily changed 
-• Allow for the user to request for the most amount of coins to make change 
-
- Please “reply to all” if you need any clarification on the above assignment. The team is copied on this email. 
+ * • Available bills are (1, 2, 5, 10, 20, 50, 100)
+ * • Available coins are (0.01, 0.05, 0.10, 0.25)
+ * • Start with 100 coins of each type
+ * • Change should be made by utilizing the least amount of coins
+ * • API should validate bad input and respond accordingly
+ * • Service should respond with an appropriate message if it does not have
+ * enough coins to make change • The service should maintain the state of the
+ * coins throughout the transactions
+ * • Deliver the code with test cases
+ * • Upload your code to GitHub and come to interview prepared to walk through
+ * code
+ * 
+ * Bonus:
+ * • Allow for number of coins to be configurable and easily changed
+ * • Allow for the user to request for the most amount of coins to make change
+ * 
+ * Please “reply to all” if you need any clarification on the above assignment.
+ * The team is copied on this email.
  */
 
 @RestController
@@ -41,19 +46,28 @@ public class CoinsForBillController {
         this.coinsForBillService = coinsForBillService;
     }
 
-    @GetMapping("/change/{bill}")
-    public List<CoinsHolder> getCoinsForBill(@PathVariable("bill") String bill) {
+    @GetMapping({ "/change", "/change/", "/change/{bill}" })
+    public List<CoinsHolder> getCoinsForBill(@PathVariable(value = "bill", required = false) String bill) {
         LOG.info(bill);
         if (!BillsAndCoinsUtils.isValidBill(bill)) {
-            throw new InvalidParameterException(String.format("Invalid bill. Please provide one of the following bills: %s", BillsAndCoinsUtils.printBillsAsString()));
+            throw new InvalidParameterException(
+                    String.format("Invalid bill. Please provide one of the following bills: %s",
+                            BillsAndCoinsUtils.printBillsAsString()));
         }
-        return this.coinsForBillService.convertBillIntoCoins(bill);
+        return this.coinsForBillService.convertBillIntoLeastNumberOfCoins(bill);
     }
 
     @GetMapping("/reset")
-    public void resetCoins() {
+    public String resetCoins() {
         LOG.info("Reseting coins");
-        CoinsForBillService.initialize();
+        this.coinsForBillService.initialize();
+        return "Coins reset.";
     }
-    
+
+    @GetMapping("/map")
+    public String map() {
+        LOG.info("Get map");
+        return this.coinsForBillService.currentCoins().toString();
+    }
+
 }

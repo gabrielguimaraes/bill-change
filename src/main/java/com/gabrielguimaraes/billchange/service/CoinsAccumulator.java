@@ -1,4 +1,4 @@
-package com.gabrielguimaraes.billchange.model;
+package com.gabrielguimaraes.billchange.service;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.gabrielguimaraes.billchange.model.CoinsHolder;
 
 public class CoinsAccumulator {
     public static final Logger LOG = LoggerFactory.getLogger(CoinsAccumulator.class);
@@ -19,7 +21,6 @@ public class CoinsAccumulator {
 
     public void increment(BigDecimal coin) {
         var a = coinsHolder.compute(coin, (key, value) -> value == null ? 1 : ++value);
-        // var a = coinsHolder.merge(coin, 0, (key, total) -> ++total);
         LOG.info("increment {}, map {}", a, coinsHolder);
 
     }
@@ -28,6 +29,10 @@ public class CoinsAccumulator {
         return coinsHolder.entrySet().stream()
                 .map(entry -> new CoinsHolder(entry.getKey(), entry.getValue()))
                 .collect(Collectors.toList());
+    }
+
+    public Map<BigDecimal, Integer> retrieveMap() {
+        return new HashMap<>(coinsHolder);
     }
 
 }
