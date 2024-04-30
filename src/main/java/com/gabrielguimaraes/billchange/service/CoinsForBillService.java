@@ -46,8 +46,7 @@ public class CoinsForBillService {
      * The team is copied on this email.
      */
 
-    public List<CoinsHolder> convertBillIntoLeastNumberOfCoins(final String bill) {
-        BigDecimal billValue = new BigDecimal(bill);
+    public List<CoinsHolder> convertBillIntoLeastNumberOfCoins(BigDecimal billValue) {
         CoinsAccumulator acc = new CoinsAccumulator();
         // subtract the bill using higher coin
         // iterate and decrease value in map

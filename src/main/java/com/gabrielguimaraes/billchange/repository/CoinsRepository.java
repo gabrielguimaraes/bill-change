@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import com.gabrielguimaraes.billchange.config.CoinsProperties;
 import com.gabrielguimaraes.billchange.utils.BillsAndCoinsUtils;
 
 import jakarta.annotation.PostConstruct;
@@ -15,15 +16,22 @@ import jakarta.annotation.PostConstruct;
 @Component
 public class CoinsRepository {
     public static final Logger LOG = LoggerFactory.getLogger(CoinsRepository.class);
+    
+    private final CoinsProperties coinsProperties;
+
+    public CoinsRepository(CoinsProperties coinsProperties) {
+        this.coinsProperties = coinsProperties;
+    }
 
     public final Map<BigDecimal, Integer> TOTAL_COINS = new ConcurrentHashMap<>();
     
     @PostConstruct
     public void initialize() {
-        TOTAL_COINS.put(BillsAndCoinsUtils.COIN_0_01, 100);
-        TOTAL_COINS.put(BillsAndCoinsUtils.COIN_0_05, 100);
-        TOTAL_COINS.put(BillsAndCoinsUtils.COIN_0_10, 100);
-        TOTAL_COINS.put(BillsAndCoinsUtils.COIN_0_25, 100);
+        int totalCoins = coinsProperties.getTotalCoins();
+        TOTAL_COINS.put(BillsAndCoinsUtils.COIN_0_01, totalCoins);
+        TOTAL_COINS.put(BillsAndCoinsUtils.COIN_0_05, totalCoins);
+        TOTAL_COINS.put(BillsAndCoinsUtils.COIN_0_10, totalCoins);
+        TOTAL_COINS.put(BillsAndCoinsUtils.COIN_0_25, totalCoins);
     }  
     
     public boolean canSubtract(BigDecimal value) {

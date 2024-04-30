@@ -1,5 +1,6 @@
 package com.gabrielguimaraes.billchange.controller;
 
+import java.math.BigDecimal;
 import java.security.InvalidParameterException;
 import java.util.List;
 
@@ -54,7 +55,7 @@ public class CoinsForBillController {
                     String.format("Invalid bill. Please provide one of the following bills: %s",
                             BillsAndCoinsUtils.printBillsAsString()));
         }
-        return this.coinsForBillService.convertBillIntoLeastNumberOfCoins(bill);
+        return this.coinsForBillService.convertBillIntoLeastNumberOfCoins(new BigDecimal(bill));
     }
 
     @GetMapping("/reset")
