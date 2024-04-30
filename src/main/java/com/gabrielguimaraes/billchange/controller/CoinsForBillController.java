@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gabrielguimaraes.billchange.model.CoinsHolder;
@@ -48,14 +49,16 @@ public class CoinsForBillController {
     }
 
     @GetMapping({ "/change", "/change/", "/change/{bill}" })
-    public List<CoinsHolder> getCoinsForBill(@PathVariable(value = "bill", required = false) String bill) {
-        LOG.info(bill);
+    public List<CoinsHolder> getCoinsForBill(
+        @PathVariable(value = "bill", required = false) String bill, 
+        @RequestParam(required = false, defaultValue = "false") boolean mostAmount) {
+        LOG.info("{} {}", bill, mostAmount);
         if (!BillsAndCoinsUtils.isValidBill(bill)) {
             throw new InvalidParameterException(
                     String.format("Invalid bill. Please provide one of the following bills: %s",
                             BillsAndCoinsUtils.printBillsAsString()));
         }
-        return this.coinsForBillService.convertBillIntoLeastNumberOfCoins(new BigDecimal(bill));
+        return this.coinsForBillService.convertBillIntoLeastNumberOfCoins(new BigDecimal(bill), mostAmount);
     }
 
     @GetMapping("/reset")

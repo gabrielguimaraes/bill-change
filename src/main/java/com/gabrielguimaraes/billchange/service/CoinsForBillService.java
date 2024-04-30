@@ -1,8 +1,10 @@
 package com.gabrielguimaraes.billchange.service;
 
 import java.math.BigDecimal;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,12 +48,12 @@ public class CoinsForBillService {
      * The team is copied on this email.
      */
 
-    public List<CoinsHolder> convertBillIntoLeastNumberOfCoins(BigDecimal billValue) {
+    public List<CoinsHolder> convertBillIntoLeastNumberOfCoins(BigDecimal billValue, boolean mostAmount) {
         CoinsAccumulator acc = new CoinsAccumulator();
         // subtract the bill using higher coin
         // iterate and decrease value in map
         while (billValue.compareTo(BigDecimal.ZERO) != 0) {
-            BigDecimal coin = BillsAndCoinsUtils.COINS.stream()
+            BigDecimal coin = streamOfCoins(mostAmount)
                     .filter(coinsRepository::canSubtract)
                     .findFirst()
                     .orElseThrow(() -> this.undoChangesAndThrowException(acc));
@@ -60,6 +62,14 @@ public class CoinsForBillService {
         }
 
         return acc.result();
+    }
+
+    public Stream<BigDecimal> streamOfCoins(boolean mostAmount) {
+        if (mostAmount) {
+            return BillsAndCoinsUtils.COINS.stream()
+            .sorted();
+        }
+        return BillsAndCoinsUtils.COINS.stream();
     }
 
     private NotEnoughCoinsException undoChangesAndThrowException(CoinsAccumulator acc) {

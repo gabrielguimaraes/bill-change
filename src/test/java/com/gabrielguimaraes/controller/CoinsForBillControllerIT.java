@@ -34,7 +34,7 @@ public class CoinsForBillControllerIT {
         BigDecimal bill = new BigDecimal("10");
 
         // when
-        Mockito.when(coinsForBillService.convertBillIntoLeastNumberOfCoins(bill)).thenReturn(List.of(new CoinsHolder(BillsAndCoinsUtils.COIN_0_25, 40)));
+        Mockito.when(coinsForBillService.convertBillIntoLeastNumberOfCoins(bill, false)).thenReturn(List.of(new CoinsHolder(BillsAndCoinsUtils.COIN_0_25, 40)));
 
         mockMvc.perform(get(String.format("/api/change/%s", bill)))
                 .andExpect(status().isOk())
